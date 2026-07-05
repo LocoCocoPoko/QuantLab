@@ -1,0 +1,17 @@
+# Virtual environment
+venv/
+
+# Data files
+data/*
+!data/.gitkeep
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
+
+# OS/editor junk
+.DS_Store
+.vscode/
