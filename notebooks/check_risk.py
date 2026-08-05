@@ -1,0 +1,21 @@
+from src.quantlab.data.fetch import fetch_price_data
+from src.quantlab.analytics.returns import calculate_log_returns
+from src.quantlab.analytics.risk import calculate_annualized_volatility
+
+prices = fetch_price_data(
+    tickers=["AAPL", "MSFT", "GOOG"],
+    start_date="2021-01-01",
+    end_date="2024-01-01"
+)
+
+returns = calculate_log_returns(prices)
+volatility = calculate_annualized_volatility(returns)
+print(volatility)
+
+from src.quantlab.analytics.risk import calculate_annualized_return, calculate_sharpe_ratio 
+
+annual_returns = calculate_annualized_return(returns)
+sharpe = calculate_sharpe_ratio(returns)
+
+print(annual_returns)
+print(sharpe)
