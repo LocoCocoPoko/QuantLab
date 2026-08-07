@@ -51,3 +51,34 @@ def calculate_sharpe_ratio(
     annual_volatility = calculate_annualized_volatility(returns)
     sharpe = (annual_return - risk_free_rate) / annual_volatility
     return sharpe
+
+
+def calculate_correlation_matrix(returns: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate the correaltion matrix between all tickers return.
+    
+    Args:
+        returns: DataFrame of daily log returns, one clumn per tickers.
+        
+    Returns:
+        A square DataFrame where both rows and columns are tickers,
+        and each cell is the correlation between that pair of tickers.
+    """
+    return returns.corr()
+
+
+def calculate_covariance_matrix(returns: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate the covariance matrix between all tickers returns.
+    
+    Args:
+        returns: DataFrame of daily log returns, one column per ticker.
+        
+    Returns:
+        A square DataFrame where both rows and columns are tickers,
+        and each cell is the covariance between that pair of tickers.
+    """
+    daily_cov = returns.cov()
+    annual_cov = daily_cov * 252
+    return annual_cov
+
