@@ -187,3 +187,50 @@ def find_max_sharpe_portfolio(
         "return": calculate_portfolio_return(optimal_weights, annual_returns),
         "volatility": calculate_portfolio_volatility(optimal_weights, covariance_matrix)
     }
+    
+    
+def find_max_sharpe_portfolio_capped(
+    annual_returns: pd.Series,
+    covariance_matrix: pd.DataFrame,
+    risk_free_rate: float = 0.04,
+    max_weight: float = 0.4
+) -> dict:
+    """
+    Find the max Sharpe Ratio portfolio, with a cap on any single
+    asset's weight to avoid extreme concentration.
+
+    Args:
+        annual_returns: Series of annualized returns, one per asset.
+        covariance_matrix: Annualized covariance matrix.
+        risk_free_rate: Annualized risk-free rate, as a decimal.
+        max_weight: Maximum allowed weight for any single asset (0-1).
+
+    Returns:
+        A dictionary with keys 'weights', 'return', and 'volatility'.
+    """
+    num_assets = len(annual_returns)
+
+    def objective(weights):
+        port_return = calculate_portfolio_return(weights, annual_returns)
+        port_volatility = calculate_portfolio_volatility(weights, covariance_matrix)
+        sharpe = (port_return - risk_free_rate) / port_volatility
+        return -sharpe
+
+    constraints = {"type": "eq", "fun": lambda weights: np.sum(weights) - 1}
+    bounds = tuple((0, max_weight) for _ in range(num_assets))
+    initial_guess = np.array([1 / num_assets] * num_assets)
+
+    result = minimize(
+        objective,
+        initial_guess,
+        method="SLSQP",
+        bounds=bounds,
+        constraints=constraints
+    )
+
+    optimal_weights = result.x
+    return {
+        "weights": optimal_weights,
+        "return": calculate_portfolio_return(optimal_weights, annual_returns),
+        "volatility": calculate_portfolio_volatility(optimal_weights, covariance_matrix)
+    }

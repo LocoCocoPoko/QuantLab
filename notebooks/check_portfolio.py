@@ -90,3 +90,15 @@ print(f" Sharpe Ratio: {sharpe:.4f}")
 
 print(annual_returns)
 print(cov_matrix.columns)
+
+from src.quantlab.optimization.portfolio import find_max_sharpe_portfolio_capped
+
+capped_portfolio = find_max_sharpe_portfolio_capped(annual_returns, cov_matrix, max_weight=0.4)
+
+print("Capped Max Sharpe Portfolio (max 40% per asset):")
+print(f"  Weights: {capped_portfolio['weights']}")
+print(f"  Return: {capped_portfolio['return']:.4f}")
+print(f"  Volatility: {capped_portfolio['volatility']:.4f}")
+
+capped_sharpe = (capped_portfolio['return'] - 0.04) / capped_portfolio['volatility']
+print(f"  Sharpe Ratio: {capped_sharpe:.4f}")
