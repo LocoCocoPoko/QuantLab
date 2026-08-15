@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 
 def plot_correlation_heatmap(correlation_matrix: pd.DataFrame) -> None:
@@ -79,3 +80,44 @@ def plot_efficient_frontier(
     plt.tight_layout()
     plt.savefig("notebooks/efficient_frontier_final.png")
     plt.show()
+    
+
+  
+def plot_cumulative_returns(returns: pd.DataFrame) -> None:
+    """
+    Plot cumulative growth of $1 invested in each asset over time.
+
+    Args:
+        returns: DataFrame of daily log returns, one column per ticker.
+    """
+    cumulative_log_returns = returns.cumsum()
+    growth = np.exp(cumulative_log_returns)
+
+    plt.figure(figsize=(10, 6))
+    for ticker in growth.columns:
+        plt.plot(growth.index, growth[ticker], label=ticker)
+
+    plt.xlabel("Date")
+    plt.ylabel("Growth of $1")
+    plt.title("Cumulative Returns")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("notebooks/cumulative_returns.png")
+    plt.show()
+    
+def plot_portfolio_allocation(weights: np.ndarray, tickers: list[str]) -> None:
+    """
+    Plot a pie chart of portfolio weights.
+
+    Args:
+        weights: Array of portfolio weights, one per asset.
+        tickers: List of ticker symbols, matching the order of weights.
+    """
+    plt.figure(figsize=(7, 7))
+    plt.pie(weights, labels=tickers, autopct="%1.1f%%", startangle=90)
+    plt.title("Portfolio Allocation")
+    plt.tight_layout()
+    plt.savefig("notebooks/portfolio_allocation.png")
+    plt.show()
+    
+    
