@@ -40,19 +40,24 @@ analyze_button = st.sidebar.button("Analyze Portfolio")
 if analyze_button:
     tickers = [ticker.strip().upper() for ticker in tickers_input.split(",")]
 
-    with st.spinner("Fetching data and running analysis..."):
-        prices = fetch_price_data(
-            tickers=tickers,
-            start_date=str(start_date),
-            end_date=str(end_date)
-        )
-        returns = calculate_log_returns(prices)
-        annual_returns = calculate_annualized_return(returns)
-        annual_volatility = calculate_annualized_volatility(returns)
-        cov_matrix = calculate_covariance_matrix(returns)
+    try:
+        with st.spinner("Fetching data and running analysis..."):
+            prices = fetch_price_data(
+                tickers=tickers,
+                start_date=str(start_date),
+                end_date=str(end_date)
+            )
+            returns = calculate_log_returns(prices)
+            annual_returns = calculate_annualized_return(returns)
+            annual_volatility = calculate_annualized_volatility(returns)
+            cov_matrix = calculate_covariance_matrix(returns)
 
-        min_var = find_minimum_variance_portfolio(annual_returns, cov_matrix)
-        max_sharpe = find_max_sharpe_portfolio(annual_returns, cov_matrix)
+            min_var = find_minimum_variance_portfolio(annual_returns, cov_matrix)
+            max_sharpe = find_max_sharpe_portfolio(annual_returns, cov_matrix)
+
+    except ValueError as e:
+        st.error(f"⚠️ {e}")
+        st.stop()
 
     actual_tickers = list(annual_returns.index)
 
