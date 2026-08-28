@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from datetime import date
+import logging
+logging.basicConfig(level=logging.INFO)
 
 from src.quantlab.data.fetch import fetch_price_data
 from src.quantlab.analytics.returns import calculate_log_returns
