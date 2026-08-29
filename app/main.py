@@ -22,6 +22,7 @@ from src.quantlab.analytics.risk import (
 from src.quantlab.optimization.portfolio import (
     find_minimum_variance_portfolio,
     find_max_sharpe_portfolio,
+    run_monte_carlo_simulation,
 )
 
 st.title("QuantLab")
@@ -56,6 +57,7 @@ if analyze_button:
 
             min_var = find_minimum_variance_portfolio(annual_returns, cov_matrix)
             max_sharpe = find_max_sharpe_portfolio(annual_returns, cov_matrix)
+            simulation_results = run_monte_carlo_simulation(annual_returns, cov_matrix, num_portfolios=5000)
 
     except ValueError as e:
         st.error(f"⚠️ {e}")
@@ -102,6 +104,30 @@ if analyze_button:
     ax2.set_xlabel("Date")
     ax2.set_ylabel("Growth of $1")
     st.pyplot(fig2)
+
+    st.subheader("Efficient Frontier")
+    fig_frontier, ax_frontier = plt.subplots(figsize=(10, 6))
+    scatter = ax_frontier.scatter(
+        simulation_results["volatility"],
+        simulation_results["return"],
+        c=simulation_results["return"] / simulation_results["volatility"],
+        cmap="viridis",
+        s=10,
+        alpha=0.4
+    )
+    fig_frontier.colorbar(scatter, ax=ax_frontier, label="Return / Volatility")
+    ax_frontier.scatter(
+        min_var["volatility"], min_var["return"],
+        color="red", marker="*", s=400, label="Minimum Variance"
+    )
+    ax_frontier.scatter(
+        max_sharpe["volatility"], max_sharpe["return"],
+        color="black", marker="*", s=400, label="Maximum Sharpe Ratio"
+    )
+    ax_frontier.set_xlabel("Volatility (Risk)")
+    ax_frontier.set_ylabel("Expected Return")
+    ax_frontier.legend()
+    st.pyplot(fig_frontier)
 
     st.subheader("Maximum Sharpe Portfolio Allocation")
     fig3, ax3 = plt.subplots(figsize=(8, 5))

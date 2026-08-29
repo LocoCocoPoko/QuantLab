@@ -4,6 +4,8 @@
 
 QuantLab fetches real historical market data, calculates risk and return metrics, applies Modern Portfolio Theory to find mathematically optimal portfolios, and presents everything through an interactive Streamlit dashboard.
 
+🔗 **[Try the live app](https://quantlab-locococopoko.streamlit.app/)**
+
 ![QuantLab Dashboard](assets/dashboard_overview.png)
 
 ---
@@ -184,4 +186,4 @@ python -m notebooks.check_portfolio
 
 ## Author
 
-Built by Steve as a structured, from-first-principles learning project in quantitative finance and software engineering.
+Built by Steve Jacob as a structured, from-first-principles learning project in quantitative finance and software engineering.
